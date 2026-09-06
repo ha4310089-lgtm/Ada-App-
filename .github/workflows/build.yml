@@ -24,6 +24,9 @@ jobs:
             libncurses5:i386 libstdc++6:i386 zlib1g:i386 \
             libffi-dev libssl-dev
 
+      - name: Set Java Home
+        run: echo "JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64" >> $GITHUB_ENV
+
       - name: Install Buildozer & Cython
         run: |
           pip install --upgrade pip
@@ -31,15 +34,12 @@ jobs:
           pip install cython==0.29.33 virtualenv
           pip install buildozer
 
-      - name: Accept Android SDK Licenses & Build APK
-        run: |
-          mkdir -p ~/.buildozer/android/platform/android-sdk
-          yes | buildozer android debug
+      - name: Build APK with Buildozer
+        run: buildozer -v android debug
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Ada-App
           path: bin/*.apk
-          
           
