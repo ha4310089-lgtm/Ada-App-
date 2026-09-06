@@ -1,44 +1,19 @@
-name: Build Android APK
+[app]
+title = Ada
+package.name = adaai
+package.domain = org.boss
+source.dir = .
+source.include_exts = py,png,jpg,kv,atlas
+version = 1.0
+requirements = python3,kivy,flask,groq,edge-tts,urllib3,requests
+orientation = portrait
+fullscreen = 0
+android.permissions = INTERNET,RECORD_AUDIO,WAKE_LOCK,RECEIVE_BOOT_COMPLETED
+android.api = 34
+android.minapi = 21
 
-on:
-  workflow_dispatch:
+[buildozer]
+log_level = 2
+warn_on_root = 1
 
-jobs:
-  build:
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-
-      - name: Install System Dependencies
-        run: |
-          sudo dpkg --add-architecture i386
-          sudo apt-get update
-          sudo apt-get install -y \
-            git zip unzip openjdk-17-jdk python3-pip \
-            autoconf libtool pkg-config zlib1g-dev \
-            libncurses5:i386 libstdc++6:i386 zlib1g:i386 \
-            libffi-dev libssl-dev
-
-      - name: Install Buildozer & Cython
-        run: |
-          pip install --upgrade pip
-          pip install --upgrade setuptools
-          pip install cython==0.29.33 virtualenv
-          pip install buildozer
-
-      - name: Accept Android SDK Licenses & Build APK
-        run: |
-          mkdir -p ~/.buildozer/android/platform/android-sdk
-          yes | buildozer android debug
-
-      - name: Upload APK Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: Ada-App
-          path: bin/*.apk
           
