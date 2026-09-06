@@ -31,12 +31,15 @@ jobs:
           pip install cython==0.29.33 virtualenv
           pip install buildozer
 
-      - name: Build APK with Buildozer
-        run: buildozer android debug
+      - name: Accept Android SDK Licenses & Build APK
+        run: |
+          mkdir -p ~/.buildozer/android/platform/android-sdk
+          yes | buildozer android debug
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Ada-App
           path: bin/*.apk
+          
           
